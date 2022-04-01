@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math/rand"
+	"os"
 	"strings"
 )
 
@@ -43,10 +45,21 @@ func toStringFromBytes(bytes []byte) string {
 }
 func readFromFile(filename string) (deck, error) {
 	bytes, error := ioutil.ReadFile(filename)
+	if error != nil {
+		fmt.Println("Error: ", error)
+		os.Exit(1)
+	}
 	cards := deck(strings.Split(toStringFromBytes(bytes), ","))
 	return cards, error
 }
 
 func (d deck) saveToFile(filename string) error {
 	return ioutil.WriteFile(filename, []byte(d.toStringFromDeck()), 0666)
+}
+
+func (d deck) shuffleCards() {
+	rand.Shuffle(len(d), func(i, j int) {
+		d[i], d[j] = d[j], d[i]
+	})
+	d.print()
 }
