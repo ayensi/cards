@@ -32,12 +32,21 @@ func (d deck) deal(handSize int) (deck, deck) {
 	return d[:handSize], d[handSize:]
 }
 
-func (d deck) toString() string {
+func (d deck) toStringFromDeck() string {
 	stringSliceDeck := []string(d)
 	stringDeck := strings.Join(stringSliceDeck, ",")
 	return stringDeck
 }
 
+func toStringFromBytes(bytes []byte) string {
+	return string(bytes)
+}
+func readFromFile(filename string) (deck, error) {
+	bytes, error := ioutil.ReadFile(filename)
+	cards := deck(strings.Split(toStringFromBytes(bytes), ","))
+	return cards, error
+}
+
 func (d deck) saveToFile(filename string) error {
-	return ioutil.WriteFile(filename, []byte(d.toString()), 0666)
+	return ioutil.WriteFile(filename, []byte(d.toStringFromDeck()), 0666)
 }
